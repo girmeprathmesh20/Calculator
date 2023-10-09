@@ -1,0 +1,47 @@
+			   
+			   
+			   -- Table for Authors
+			CREATE TABLE Author (
+				author_id INT PRIMARY KEY AUTO_INCREMENT,
+				author_name VARCHAR(255) NOT NULL
+			);
+
+			-- Table for Books
+			CREATE TABLE Book (
+				book_id INT PRIMARY KEY AUTO_INCREMENT,
+				title VARCHAR(255) NOT NULL,
+				isbn VARCHAR(20) UNIQUE NOT NULL,
+				price DECIMAL(10, 2) NOT NULL,
+				author_id INT,
+				FOREIGN KEY (author_id) REFERENCES Author(author_id)
+			);
+
+			-- Table for Users
+			CREATE TABLE User (
+				user_id INT PRIMARY KEY AUTO_INCREMENT,
+				username VARCHAR(50) UNIQUE NOT NULL,
+				password VARCHAR(255) NOT NULL, -- Hashed and salted password
+				email VARCHAR(100) UNIQUE NOT NULL,
+				full_name VARCHAR(100)
+			);
+
+			-- Table for Orders
+			CREATE TABLE Order (
+				order_id INT PRIMARY KEY AUTO_INCREMENT,
+				user_id INT,
+				order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				total_amount DECIMAL(10, 2) NOT NULL,
+				status VARCHAR(20) DEFAULT 'PENDING', -- PENDING, PROCESSING, COMPLETED, CANCELED, etc.
+				FOREIGN KEY (user_id) REFERENCES User(user_id)
+			);
+
+			-- Table for Order Items (to store books in an order)
+			CREATE TABLE OrderItem (
+				order_item_id INT PRIMARY KEY AUTO_INCREMENT,
+				order_id INT,
+				book_id INT,
+				quantity INT NOT NULL,
+				price DECIMAL(10, 2) NOT NULL,
+				FOREIGN KEY (order_id) REFERENCES Order(order_id),
+				FOREIGN KEY (book_id) REFERENCES Book(book_id)
+			);
